@@ -1,0 +1,1 @@
+# Solidgate Test Task
