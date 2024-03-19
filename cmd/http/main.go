@@ -9,6 +9,11 @@ import (
 	"sync"
 )
 
+// @title Solidgate Test Task
+// @version 1.0
+// @description Some api for this test task.
+
+// @BasePath /
 func main() {
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug}))
 

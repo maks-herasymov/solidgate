@@ -9,6 +9,10 @@ import (
 	"strings"
 )
 
+type errorResponse struct {
+	Error string `json:"error"`
+}
+
 func (app *application) reportServerError(r *http.Request, err error) {
 	var (
 		message = err.Error()
@@ -24,7 +28,7 @@ func (app *application) reportServerError(r *http.Request, err error) {
 func (app *application) errorMessage(w http.ResponseWriter, r *http.Request, status int, message string, headers http.Header) {
 	message = strings.ToUpper(message[:1]) + message[1:]
 
-	err := response.JSONWithHeaders(w, status, map[string]string{"error": message}, headers)
+	err := response.JSONWithHeaders(w, status, &errorResponse{message}, headers)
 	if err != nil {
 		app.reportServerError(r, err)
 		w.WriteHeader(http.StatusInternalServerError)

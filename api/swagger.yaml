@@ -1,0 +1,60 @@
+basePath: /
+definitions:
+  card.Details:
+    description: Card details including the card number, expiration month, and expiration
+      year. Used for validating card information.
+    properties:
+      card_number:
+        type: string
+      expiration_month:
+        type: integer
+      expiration_year:
+        type: integer
+    type: object
+  main.errorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  main.validateCardResponse:
+    properties:
+      valid:
+        type: boolean
+    type: object
+info:
+  contact: {}
+  description: Some api for this test task.
+  title: Solidgate Test Task
+  version: "1.0"
+paths:
+  /:
+    post:
+      consumes:
+      - application/json
+      description: Validate card's number, expiration month and year
+      parameters:
+      - description: Card Details
+        in: body
+        name: details
+        required: true
+        schema:
+          $ref: '#/definitions/card.Details'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.validateCardResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.errorResponse'
+      summary: Validate card info
+      tags:
+      - card
+swagger: "2.0"

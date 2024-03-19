@@ -15,6 +15,20 @@ func (app *application) healthcheck(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type validateCardResponse struct {
+	Valid bool `json:"valid"`
+}
+
+// @Summary Validate card info
+// @Schemes
+// @Description Validate card's number, expiration month and year
+// @Tags card
+// @Accept json
+// @Produce json
+// @Param details body card.Details true "Card Details"
+// @Success 200 {object} validateCardResponse
+// @Failure 400,500 {object} errorResponse
+// @Router / [post]
 func (app *application) validateCard(w http.ResponseWriter, r *http.Request) {
 	var details card.Details
 
@@ -26,9 +40,7 @@ func (app *application) validateCard(w http.ResponseWriter, r *http.Request) {
 
 	isValid := card.IsValidCard(&details)
 
-	vr := &struct {
-		Valid bool `json:"valid"`
-	}{isValid}
+	vr := &validateCardResponse{isValid}
 
 	err = response.JSON(w, http.StatusOK, vr)
 	if err != nil {
