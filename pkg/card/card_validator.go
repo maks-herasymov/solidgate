@@ -1,15 +1,9 @@
-package main
+package card
 
 import (
 	"strconv"
 	"time"
 )
-
-type CardDetails struct {
-	CardNumber      string
-	ExpirationMonth int
-	ExpirationYear  int
-}
 
 func isValidLuhn(cardNumber string) bool {
 	var sum int
