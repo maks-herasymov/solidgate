@@ -1,8 +1,8 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/maks-herasymov/solidgate/internal/request"
 	"github.com/maks-herasymov/solidgate/internal/response"
 	"github.com/maks-herasymov/solidgate/pkg/card"
 	"net/http"
@@ -16,21 +16,20 @@ func (app *application) healthcheck(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) validateCard(w http.ResponseWriter, r *http.Request) {
-	details := &card.CardDetails{}
+	var details card.Details
 
-	err := json.NewDecoder(r.Body).Decode(details)
+	err := request.DecodeJSON(w, r, &details)
 	if err != nil {
 		app.badRequest(w, r, err)
 		return
 	}
 
-	isValid := card.IsValidCard(details)
+	isValid := card.IsValidCard(&details)
 
-	type ValidationResponse struct {
+	vr := &struct {
 		Valid bool `json:"valid"`
-	}
+	}{isValid}
 
-	vr := &ValidationResponse{isValid}
 	err = response.JSON(w, http.StatusOK, vr)
 	if err != nil {
 		app.serverError(w, r, err)

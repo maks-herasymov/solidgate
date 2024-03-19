@@ -36,7 +36,7 @@ func (app *application) logAccess(next http.Handler) http.Handler {
 
 		userAttrs := slog.Group("user", "ip", ip)
 		requestAttrs := slog.Group("request", "method", method, "url", url, "proto", proto)
-		responseAttrs := slog.Group("repsonse", "status", mw.StatusCode, "size", mw.BytesCount)
+		responseAttrs := slog.Group("response", "status", mw.StatusCode, "size", mw.BytesCount)
 
 		app.logger.Info("access", userAttrs, requestAttrs, responseAttrs)
 	})

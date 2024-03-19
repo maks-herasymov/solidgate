@@ -119,16 +119,16 @@ func TestIsValidCardExpiration(t *testing.T) {
 
 func TestIsValidCard(t *testing.T) {
 	cardDetailsTests := []struct {
-		card     CardDetails
+		card     Details
 		expected bool
 	}{
-		{CardDetails{CardNumber: "4242424242424242", ExpirationMonth: 12, ExpirationYear: time.Now().Year() + 1}, true},
-		{CardDetails{CardNumber: "5555555555554444", ExpirationMonth: int(time.Now().Month()) + 1, ExpirationYear: time.Now().Year()}, true},
-		{CardDetails{CardNumber: "1234567890123456", ExpirationMonth: 12, ExpirationYear: time.Now().Year() + 1}, false},
-		{CardDetails{CardNumber: "4242424242", ExpirationMonth: 12, ExpirationYear: time.Now().Year() + 1}, false},
-		{CardDetails{CardNumber: "4242424242424242", ExpirationMonth: 12, ExpirationYear: time.Now().Year() - 1}, false},
-		{CardDetails{CardNumber: "4242424242424242", ExpirationMonth: int(time.Now().Month()) - 1, ExpirationYear: time.Now().Year()}, false},
-		{CardDetails{CardNumber: "4242424242424242", ExpirationMonth: 13, ExpirationYear: time.Now().Year()}, false},
+		{Details{CardNumber: "4242424242424242", ExpirationMonth: 12, ExpirationYear: time.Now().Year() + 1}, true},
+		{Details{CardNumber: "5555555555554444", ExpirationMonth: int(time.Now().Month()) + 1, ExpirationYear: time.Now().Year()}, true},
+		{Details{CardNumber: "1234567890123456", ExpirationMonth: 12, ExpirationYear: time.Now().Year() + 1}, false},
+		{Details{CardNumber: "4242424242", ExpirationMonth: 12, ExpirationYear: time.Now().Year() + 1}, false},
+		{Details{CardNumber: "4242424242424242", ExpirationMonth: 12, ExpirationYear: time.Now().Year() - 1}, false},
+		{Details{CardNumber: "4242424242424242", ExpirationMonth: int(time.Now().Month()) - 1, ExpirationYear: time.Now().Year()}, false},
+		{Details{CardNumber: "4242424242424242", ExpirationMonth: 13, ExpirationYear: time.Now().Year()}, false},
 	}
 
 	for _, test := range cardDetailsTests {

@@ -51,7 +51,7 @@ func isValidCardExpiration(month int, year int) bool {
 	return true
 }
 
-func IsValidCard(card *CardDetails) bool {
+func IsValidCard(card *Details) bool {
 	return isValidCardNumberLength(len(card.CardNumber)) &&
 		isValidLuhn(card.CardNumber) &&
 		isValidExpirationMonth(card.ExpirationMonth) &&
