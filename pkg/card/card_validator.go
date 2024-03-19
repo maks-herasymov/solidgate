@@ -1,6 +1,7 @@
 package card
 
 import (
+	"errors"
 	"strconv"
 	"time"
 )
@@ -51,10 +52,25 @@ func isValidCardExpiration(month int, year int) bool {
 	return true
 }
 
-func IsValidCard(card *Details) bool {
-	return isValidCardNumberLength(len(card.CardNumber)) &&
-		isValidLuhn(card.CardNumber) &&
-		isValidExpirationMonth(card.ExpirationMonth) &&
-		isValidExpirationYear(card.ExpirationYear) &&
-		isValidCardExpiration(card.ExpirationMonth, card.ExpirationYear)
+var (
+	invalidCardNumber          = errors.New("Invalid card number")
+	invalidCardExpirationMonth = errors.New("Invalid card expiration month")
+	invalidCardExpirationYear  = errors.New("Invalid card expiration year")
+	cardHasExpired             = errors.New("This card has expired")
+)
+
+func IsValidCard(card *Details) (int, error) {
+	if !isValidCardNumberLength(len(card.CardNumber)) || !isValidLuhn(card.CardNumber) {
+		return 1, invalidCardNumber
+	}
+	if !isValidExpirationMonth(card.ExpirationMonth) {
+		return 2, invalidCardExpirationMonth
+	}
+	if !isValidExpirationYear(card.ExpirationYear) {
+		return 3, invalidCardExpirationYear
+	}
+	if !isValidCardExpiration(card.ExpirationMonth, card.ExpirationYear) {
+		return 4, cardHasExpired
+	}
+	return 0, nil
 }

@@ -78,6 +78,17 @@ const docTemplate = `{
                 }
             }
         },
+        "main.cardValidationError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
         "main.errorResponse": {
             "type": "object",
             "properties": {
@@ -89,6 +100,9 @@ const docTemplate = `{
         "main.validateCardResponse": {
             "type": "object",
             "properties": {
+                "error": {
+                    "$ref": "#/definitions/main.cardValidationError"
+                },
                 "valid": {
                     "type": "boolean"
                 }

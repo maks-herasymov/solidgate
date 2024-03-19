@@ -15,8 +15,14 @@ func (app *application) healthcheck(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type cardValidationError struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
 type validateCardResponse struct {
-	Valid bool `json:"valid"`
+	Valid bool                 `json:"valid"`
+	Error *cardValidationError `json:"error,omitempty"`
 }
 
 // @Summary Validate card info
@@ -38,9 +44,20 @@ func (app *application) validateCard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	isValid := card.IsValidCard(&details)
+	if code, err := card.IsValidCard(&details); err != nil {
+		app.failedValidation(w, r, &validateCardResponse{
+			Valid: false,
+			Error: &cardValidationError{
+				Code:    code,
+				Message: err.Error(),
+			},
+		})
+		return
+	}
 
-	vr := &validateCardResponse{isValid}
+	vr := &validateCardResponse{
+		Valid: true,
+	}
 
 	err = response.JSON(w, http.StatusOK, vr)
 	if err != nil {

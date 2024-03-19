@@ -120,20 +120,20 @@ func TestIsValidCardExpiration(t *testing.T) {
 func TestIsValidCard(t *testing.T) {
 	cardDetailsTests := []struct {
 		card     Details
-		expected bool
+		expected error
 	}{
-		{Details{CardNumber: "4242424242424242", ExpirationMonth: 12, ExpirationYear: time.Now().Year() + 1}, true},
-		{Details{CardNumber: "5555555555554444", ExpirationMonth: int(time.Now().Month()) + 1, ExpirationYear: time.Now().Year()}, true},
-		{Details{CardNumber: "1234567890123456", ExpirationMonth: 12, ExpirationYear: time.Now().Year() + 1}, false},
-		{Details{CardNumber: "4242424242", ExpirationMonth: 12, ExpirationYear: time.Now().Year() + 1}, false},
-		{Details{CardNumber: "4242424242424242", ExpirationMonth: 12, ExpirationYear: time.Now().Year() - 1}, false},
-		{Details{CardNumber: "4242424242424242", ExpirationMonth: int(time.Now().Month()) - 1, ExpirationYear: time.Now().Year()}, false},
-		{Details{CardNumber: "4242424242424242", ExpirationMonth: 13, ExpirationYear: time.Now().Year()}, false},
+		{Details{CardNumber: "4242424242424242", ExpirationMonth: 12, ExpirationYear: time.Now().Year() + 1}, nil},
+		{Details{CardNumber: "5555555555554444", ExpirationMonth: int(time.Now().Month()) + 1, ExpirationYear: time.Now().Year()}, nil},
+		{Details{CardNumber: "1234567890123456", ExpirationMonth: 12, ExpirationYear: time.Now().Year() + 1}, invalidCardNumber},
+		{Details{CardNumber: "4242424242", ExpirationMonth: 12, ExpirationYear: time.Now().Year() + 1}, invalidCardNumber},
+		{Details{CardNumber: "4242424242424242", ExpirationMonth: 12, ExpirationYear: time.Now().Year() - 1}, invalidCardExpirationYear},
+		{Details{CardNumber: "4242424242424242", ExpirationMonth: int(time.Now().Month()) - 1, ExpirationYear: time.Now().Year()}, cardHasExpired},
+		{Details{CardNumber: "4242424242424242", ExpirationMonth: 13, ExpirationYear: time.Now().Year()}, invalidCardExpirationMonth},
 	}
 
 	for _, test := range cardDetailsTests {
-		if got := IsValidCard(&test.card); got != test.expected {
-			t.Errorf("IsValidCard() = %v, want %v for card %+v", got, test.expected, test.card)
+		if _, err := IsValidCard(&test.card); err != test.expected {
+			t.Errorf("IsValidCard() = %v, want %v for card %+v", err, test.expected, test.card)
 		}
 	}
 }

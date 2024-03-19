@@ -52,3 +52,10 @@ func (app *application) methodNotAllowed(w http.ResponseWriter, r *http.Request)
 func (app *application) badRequest(w http.ResponseWriter, r *http.Request, e error) {
 	app.errorMessage(w, r, http.StatusBadRequest, e.Error(), nil)
 }
+
+func (app *application) failedValidation(w http.ResponseWriter, r *http.Request, e interface{}) {
+	err := response.JSON(w, http.StatusBadRequest, e)
+	if err != nil {
+		app.serverError(w, r, err)
+	}
+}
